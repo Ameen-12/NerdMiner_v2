@@ -44,7 +44,7 @@
 nvs_handle_t stat_handle;
 
 uint32_t templates = 0;
-volatile uint32_t hashes = 0;
+uint32_t hashes = 0;
 uint32_t Mhashes = 0;
 uint32_t totalKHashes = 0;
 uint32_t elapsedKHs = 0;
