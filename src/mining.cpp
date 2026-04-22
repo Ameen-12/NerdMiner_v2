@@ -1,3 +1,4 @@
+#include <stdlib.h>
 #include <Arduino.h>
 #include <ArduinoJson.h>
 #include <WiFi.h>
@@ -43,7 +44,7 @@
 nvs_handle_t stat_handle;
 
 uint32_t templates = 0;
-uint32_t hashes = 0;
+volatile uint32_t hashes = 0;
 uint32_t Mhashes = 0;
 uint32_t totalKHashes = 0;
 uint32_t elapsedKHs = 0;
@@ -258,7 +259,7 @@ void runStratumWorker(void *name) {
       mMonitor.NerdStatus = NM_Connecting;
       MiningJobStop(job_pool, s_submition_map);
       WiFi.reconnect();
-      vTaskDelay(5000 / portTICK_PERIOD_MS);
+      vTaskDelay(3000 / portTICK_PERIOD_MS);
       continue;
     } 
 
