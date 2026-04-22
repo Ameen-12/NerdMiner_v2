@@ -561,7 +561,7 @@ void runStratumWorker(void *name) {
         // Serial.print("   - Current pool diff : "); // Serial.println(currentPoolDifficulty,12);
         // Serial.print("   - TX SHARE: ");
         for (size_t i = 0; i < 32; i++)
-            Serial.printf("%02x", res->hash[i]);
+            // Serial.printf("%02x", res->hash[i]);
         // Serial.println("");
         mLastTXtoPool = millis();
 
