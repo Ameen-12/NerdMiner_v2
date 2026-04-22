@@ -551,7 +551,12 @@ void runStratumWorker(void *name) {
       job_result_list.pop_front();
 
       hashes += res->nonce_count;
-      if (res->difficulty > currentPoolDifficulty && job_pool == res->id && res->nonce != 0xFFFFFFFF)
+      if (
+    res->difficulty > currentPoolDifficulty &&
+    job_pool == res->id &&
+    res->nonce != 0xFFFFFFFF &&
+    isSha256Valid(res->hash)
+)
       {
         if (!client.connected())
           break;
