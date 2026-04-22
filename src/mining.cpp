@@ -471,7 +471,7 @@ void runStratumWorker(void *name) {
     #ifdef I2C_SLAVE
     if (i2c_slave_vector.empty() || job_pool == 0xFFFFFFFF)
     {
-      vTaskDelay(50 / portTICK_PERIOD_MS); //Small delay
+      vTaskDelay(10 / portTICK_PERIOD_MS); //Small delay
     } else
     {
       uint32_t time_start = millis();
