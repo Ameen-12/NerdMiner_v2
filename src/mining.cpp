@@ -20,8 +20,8 @@
 #include "i2c_master.h"
 
 //10 Jobs per second
-#define NONCE_PER_JOB_SW 16384
-#define NONCE_PER_JOB_HW 32*1024
+#define NONCE_PER_JOB_SW 32768
+#define NONCE_PER_JOB_HW 65536
 
 //#define I2C_SLAVE
 
@@ -612,14 +612,15 @@ void minerWorkerSw(void * task_id)
     if (job)
     {
       result = std::make_shared<JobResult>();
-      result->difficulty = job->difficulty;
+      result->difficulty = 0.0;
       result->nonce = 0xFFFFFFFF;
       result->id = job->id;
       result->nonce_count = job->nonce_count;
       uint8_t job_in_work = job->id & 0xFF;
       for (uint32_t n = 0; n < job->nonce_count; ++n)
       {
-        ((uint32_t*)(job->sha_buffer+64+12))[0] = job->nonce_start+n;
+        uint32_t* nonce_ptr = (uint32_t*)(job->sha_buffer + 76);
+*nonce_ptr = job->nonce_start + n;
         if (nerd_sha256d_baked(job->midstate, job->sha_buffer+64, job->bake, hash))
         {
           double diff_hash = diff_from_target(hash);
@@ -631,14 +632,14 @@ void minerWorkerSw(void * task_id)
           }
         }
 
-        if ( (uint16_t)(n & 0xFF) == 0 &&s_working_current_job_id != job_in_work)
+        if ( (uint16_t)(n & 0x3FF) == 0 &&s_working_current_job_id != job_in_work)
         {
           result->nonce_count = n+1;
           break;
         }
       }
     } else
-      vTaskDelay(2 / portTICK_PERIOD_MS);
+      vTaskDelay(1 / portTICK_PERIOD_MS);
 
     wdt_counter++;
     if (wdt_counter >= 8)
@@ -804,7 +805,7 @@ void minerWorkerHw(void * task_id)
       std::lock_guard<std::mutex> lock(s_job_mutex);
       if (result)
       {
-        if (s_job_result_list.size() < 16)
+        if (s_job_result_list.size() < 32)
           s_job_result_list.push_back(result);
         result.reset();
       }
@@ -821,7 +822,7 @@ void minerWorkerHw(void * task_id)
       result->id = job->id;
       result->nonce = 0xFFFFFFFF;
       result->nonce_count = job->nonce_count;
-      result->difficulty = job->difficulty;
+      result->difficulty = 0.0;
       uint8_t job_in_work = job->id & 0xFF;
       memcpy(digest_mid, job->midstate, sizeof(digest_mid));
       memcpy(sha_buffer, job->sha_buffer+64, sizeof(sha_buffer));
@@ -835,7 +836,7 @@ void minerWorkerHw(void * task_id)
       uint32_t nend = job->nonce_start + job->nonce_count;
       for (uint32_t n = job->nonce_start; n < nend; ++n)
       {
-        //nerd_sha_hal_wait_idle();
+        nerd_sha_hal_wait_idle();
         nerd_sha_ll_write_digest(digest_mid);
         //nerd_sha_hal_wait_idle();
         nerd_sha_ll_fill_text_block_sha256(sha_buffer, n);
@@ -878,7 +879,7 @@ void minerWorkerHw(void * task_id)
           }
         }
         if (
-             (uint8_t)(n & 0xFF) == 0 &&
+             (uint16_t)(n & 0x3FF) == 0 &&
              s_working_current_job_id != job_in_work)
         {
           result->nonce_count = n-job->nonce_start+1;
@@ -887,10 +888,10 @@ void minerWorkerHw(void * task_id)
       }
       esp_sha_release_hardware();
     } else
-      vTaskDelay(2 / portTICK_PERIOD_MS);
+      vTaskDelay(1 / portTICK_PERIOD_MS);
 
     wdt_counter++;
-    if (wdt_counter >= 8)
+    if (wdt_counter >= 16)
     {
       wdt_counter = 0;
       esp_task_wdt_reset();
@@ -1062,7 +1063,7 @@ void minerWorkerHw(void * task_id)
       result->id = job->id;
       result->nonce = 0xFFFFFFFF;
       result->nonce_count = job->nonce_count;
-      result->difficulty = job->difficulty;
+      result->difficulty = 0.0;
       uint8_t job_in_work = job->id & 0xFF;
       memcpy(sha_buffer, job->sha_buffer, 80);
 
