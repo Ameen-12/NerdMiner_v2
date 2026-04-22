@@ -20,14 +20,14 @@
 #include "i2c_master.h"
 
 //10 Jobs per second
-#define NONCE_PER_JOB_SW 4096
-#define NONCE_PER_JOB_HW 16*1024
+#define NONCE_PER_JOB_SW 16384
+#define NONCE_PER_JOB_HW 32*1024
 
 //#define I2C_SLAVE
 
 //#define SHA256_VALIDATE
 //#define RANDOM_NONCE
-#define RANDOM_NONCE_MASK 0xFFFFC000
+// #define RANDOM_NONCE_MASK 0xFFFFC000
 
 #ifdef HARDWARE_SHA265
 #include <sha/sha_dma.h>
