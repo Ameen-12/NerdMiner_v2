@@ -861,7 +861,8 @@ void minerWorkerHw(void * task_id)
           // Serial.printf("Hw 16bit Share, nonce=0x%X\n", n);
 #ifdef VALIDATION
           //Validation
-          ((uint32_t*)(job->sha_buffer+64+12))[0] = n;
+          uint32_t *nonce_ptr = (uint32_t*)(job->sha_buffer + 76);
+*nonce_ptr = job->nonce_start + n;
           nerd_sha256d_baked(diget_mid, job->sha_buffer+64, bake, doubleHash);
           for (int i = 0; i < 32; ++i)
           {
