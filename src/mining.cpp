@@ -646,7 +646,7 @@ void minerWorkerSw(void * task_id)
 
         if ( (uint16_t)(n & 0x3FF) == 0 &&s_working_current_job_id != job_in_work)
         {
-          result->nonce_count = n+1;
+          result->nonce_count = (n - job->nonce_start) + 1;
           break;
         }
       }
