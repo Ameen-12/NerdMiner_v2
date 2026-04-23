@@ -905,7 +905,7 @@ void minerWorkerHw(void * task_id)
       vTaskDelay(1 / portTICK_PERIOD_MS);
 
     wdt_counter++;
-    if (wdt_counter >= 16)
+    if (wdt_counter >= 4)
     {
       wdt_counter = 0;
       esp_task_wdt_reset();
