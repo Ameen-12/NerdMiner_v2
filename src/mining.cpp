@@ -576,18 +576,18 @@ mWorker.wPass[sizeof(mWorker.wPass) - 1] = '\0';
         // Serial.println("");
         mLastTXtoPool = millis();
 
-        std::shared_ptr<Submition> submition = std::make_shared<Submition>();
-        submition->diff = res->difficulty;
-        submition->is32bit = (res->hash[29] == 0 && res->hash[28] == 0);
-        if (submition->is32bit)
+        std::shared_ptr<Submission> Submission = std::make_shared<Submission>();
+        Submission->diff = res->difficulty;
+        Submission->is32bit = (res->hash[29] == 0 && res->hash[28] == 0);
+        if (Submission->is32bit)
         {
-          submition->isValid = checkValid(res->hash, mMiner.bytearray_target);
+          Submission->isValid = checkValid(res->hash, mMiner.bytearray_target);
         } else
-          submition->isValid = false;
+          Submission->isValid = false;
 
-        s_submition_map.insert(std::make_pair(sumbit_id, submition));
-        if (s_submition_map.size() > 32)
-          s_submition_map.erase(s_submition_map.begin());
+        s_Submission_map.insert(std::make_pair(sumbit_id, Submission));
+        if (s_Submission_map.size() > 32)
+          s_Submission_map.erase(s_Submission_map.begin());
       }
     }
   }
