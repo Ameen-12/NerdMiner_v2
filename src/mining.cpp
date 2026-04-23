@@ -649,7 +649,7 @@ result->nonce = n;
           if (diff_hash > result->difficulty)
           {
             result->difficulty = diff_hash;
-            result->nonce = job->nonce_start+n;
+            result->nonce = n;
             memcpy(result->hash, hash, 32);
           }
         }
@@ -1124,7 +1124,7 @@ void minerWorkerHw(void * task_id)
             if (isSha256Valid(hash))
             {
               result->difficulty = diff_hash;
-              result->nonce = job->nonce_start+n;
+              result->nonce = n;
               memcpy(result->hash, hash, sizeof(hash));
             }
           }
