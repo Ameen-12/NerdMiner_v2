@@ -185,7 +185,7 @@ static void JobPush(std::list<std::shared_ptr<JobRequest>> &job_list,  uint32_t 
   job_list.push_back(job);
 }
 
-struct Submition
+struct Submission
 {
   double diff;
   bool is32bit;
