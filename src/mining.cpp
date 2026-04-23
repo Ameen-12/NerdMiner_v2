@@ -1148,6 +1148,7 @@ void restoreStat() {
   }
 
   ret = nvs_open("state", NVS_READWRITE, &stat_handle);
+  if (ret != ESP_OK) return;
 
   size_t required_size = sizeof(double);
   nvs_get_blob(stat_handle, "best_diff", &best_diff, &required_size);
