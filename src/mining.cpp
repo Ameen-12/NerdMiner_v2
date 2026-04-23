@@ -916,7 +916,7 @@ void minerWorkerHw(void * task_id)
 static inline bool nerd_sha_ll_read_digest_swap_if(void* ptr)
 {
   DPORT_INTERRUPT_DISABLE();
-  uint32_t fin = DPORT_SEQUENCE_REG_READ(SHA_TEXT_BASE + 7 * 4);
+  uint32_t fin = DPORT_SEQUENCE_REG_READ(SHA_H_BASE + 7 * 4);
   if ( (uint32_t)(fin & 0xFFFF) != 0)
   {
     DPORT_INTERRUPT_RESTORE();
