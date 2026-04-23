@@ -1,3 +1,5 @@
+#define HARDWARE_SHA265
+//#define I2C_SLAVE
 #include <stdlib.h>
 #include <Arduino.h>
 #include <ArduinoJson.h>
