@@ -192,7 +192,7 @@ struct Submission
   bool isValid;
 };
 
-static void MiningJobStop(uint32_t &job_pool, std::map<uint32_t, std::shared_ptr<Submition>> & submition_map)
+static void MiningJobStop(uint32_t &job_pool, std::map<uint32_t, std::shared_ptr<Submission>> & Submission_map)
 {
   {
     std::lock_guard<std::mutex> lock(s_job_mutex);
@@ -204,7 +204,7 @@ static void MiningJobStop(uint32_t &job_pool, std::map<uint32_t, std::shared_ptr
   }
   s_working_current_job_id = 0xFF;
   job_pool = 0xFFFFFFFF;
-  submition_map.clear();
+  Submission_map.clear();
 }
 
 #ifdef RANDOM_NONCE
@@ -231,7 +231,7 @@ void runStratumWorker(void *name) {
   // Serial.printf("### [Total Heap / Free heap / Min free heap]: %d / %d / %d \n", ESP.getHeapSize(), ESP.getFreeHeap(), ESP.getMinFreeHeap());
   #endif
 
-  std::map<uint32_t, std::shared_ptr<Submition>> s_submition_map;
+  std::map<uint32_t, std::shared_ptr<Submission>> s_Submission_map;
 
 #ifdef I2C_SLAVE
   std::vector<uint8_t> i2c_slave_vector;
@@ -260,7 +260,7 @@ void runStratumWorker(void *name) {
     if(WiFi.status() != WL_CONNECTED){
       // WiFi is disconnected, so reconnect now
       mMonitor.NerdStatus = NM_Connecting;
-      MiningJobStop(job_pool, s_submition_map);
+      MiningJobStop(job_pool, s_Submission_map);
       WiFi.reconnect();
       vTaskDelay(3000 / portTICK_PERIOD_MS);
       continue;
@@ -269,7 +269,7 @@ void runStratumWorker(void *name) {
     if(!checkPoolConnection()){
       //If server is not reachable add random delay for connection retries
       //Generate value between 1 and 60 secs
-      MiningJobStop(job_pool, s_submition_map);
+      MiningJobStop(job_pool, s_Submission_map);
       vTaskDelay(((1 + rand() % 60) * 1000) / portTICK_PERIOD_MS);
       continue;
     }
@@ -282,7 +282,7 @@ void runStratumWorker(void *name) {
       // STEP 1: Pool server connection (SUBSCRIBE)
       if(!tx_mining_subscribe(client, mWorker)) { 
         client.stop();
-        MiningJobStop(job_pool, s_submition_map);
+        MiningJobStop(job_pool, s_Submission_map);
         continue; 
       }
       
@@ -310,7 +310,7 @@ mWorker.wPass[sizeof(mWorker.wPass) - 1] = '\0';
       // Serial.println("  Detected more than 2 min without data form stratum server. Closing socket and reopening...");
       client.stop();
       isMinerSuscribed=false;
-      MiningJobStop(job_pool, s_submition_map);
+      MiningJobStop(job_pool, s_Submission_map);
       continue; 
     }
 
@@ -322,7 +322,7 @@ mWorker.wPass[sizeof(mWorker.wPass) - 1] = '\0';
       {
         client.stop();
         isMinerSuscribed=false;
-        MiningJobStop(job_pool, s_submition_map);
+        MiningJobStop(job_pool, s_Submission_map);
         continue;
       }
     }
@@ -436,15 +436,15 @@ mWorker.wPass[sizeof(mWorker.wPass) - 1] = '\0';
                                         // Serial.println("Parsing error, need restart");
                                         client.stop();
                                         isMinerSuscribed=false;
-                                        MiningJobStop(job_pool, s_submition_map);
+                                        MiningJobStop(job_pool, s_Submission_map);
                                       }
                                       break;
           case MINING_SET_DIFFICULTY: parse_mining_set_difficulty(line, currentPoolDifficulty);
                                       break;
           case STRATUM_SUCCESS:       {
                                         unsigned long id = parse_extract_id(line);
-                                        auto itt = s_submition_map.find(id);
-                                        if (itt != s_submition_map.end())
+                                        auto itt = s_Submission_map.find(id);
+                                        if (itt != s_Submission_map.end())
                                         {
                                           if (itt->second->diff > best_diff)
                                             best_diff = itt->second->diff;
@@ -455,17 +455,17 @@ mWorker.wPass[sizeof(mWorker.wPass) - 1] = '\0';
                                             // Serial.println("CONGRATULATIONS! Valid block found");
                                             valids++;
                                           }
-                                          s_submition_map.erase(itt);
+                                          s_Submission_map.erase(itt);
                                         }
                                       }
                                       break;
           case STRATUM_PARSE_ERROR:   {
                                         unsigned long id = parse_extract_id(line);
-                                        auto itt = s_submition_map.find(id);
-                                        if (itt != s_submition_map.end())
+                                        auto itt = s_Submission_map.find(id);
+                                        if (itt != s_Submission_map.end())
                                         {
-                                          // Serial.printf("Refuse submition %d\n", id);
-                                          s_submition_map.erase(itt);
+                                          // Serial.printf("Refuse Submission %d\n", id);
+                                          s_Submission_map.erase(itt);
                                         }
                                       }
                                       break;
