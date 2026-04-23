@@ -1080,8 +1080,7 @@ void minerWorkerHw(void * task_id)
       esp_sha_lock_engine(SHA2_256);
       for (uint32_t n = 0; n < job->nonce_count; ++n)
       {
-        //((uint32_t*)(sha_buffer+64+12))[0] = __builtin_bswap32(job->nonce_start+n);
-
+        
         //sha_hal_hash_block(SHA2_256, s_test_buffer, 64/4, true);
         //nerd_sha_hal_wait_idle();
         nerd_sha_ll_fill_text_block_sha256(sha_buffer);
