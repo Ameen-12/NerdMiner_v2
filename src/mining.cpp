@@ -385,7 +385,16 @@ mWorker.wPass[sizeof(mWorker.wPass) - 1] = '\0';
 
                                           #if defined(CONFIG_IDF_TARGET_ESP32)
                                           for (int i = 0; i < 32; ++i)
-                                            ((uint32_t*)sha_buffer_swap)[i] = __builtin_bswap32(((const uint32_t*)(mMiner.bytearray_blockheader))[i]);
+                                            memcpy(sha_buffer_swap, mMiner.bytearray_blockheader, 128);
+
+uint32_t temp;
+
+for (int i = 0; i < 32; i++)
+{
+    memcpy(&temp, mMiner.bytearray_blockheader + (i * 4), 4);
+    temp = __builtin_bswap32(temp);
+    memcpy(sha_buffer_swap + (i * 4), &temp, 4);
+}
                                           #endif
 
                                           #ifdef RANDOM_NONCE
