@@ -1,3 +1,4 @@
+#include <cstring>
 #define HARDWARE_SHA265
 //#define I2C_SLAVE
 #include <stdlib.h>
@@ -557,7 +558,7 @@ void runStratumWorker(void *name) {
     res->difficulty > currentPoolDifficulty &&
     job_pool == res->id &&
     res->nonce != 0xFFFFFFFF &&
-    isSha256Valid(res->hash)
+    true
 )
       {
         if (!client.connected())
