@@ -626,7 +626,7 @@ void minerWorkerSw(void * task_id)
       result->id = job->id;
       result->nonce_count = job->nonce_count;
       uint8_t job_in_work = job->id & 0xFF;
-      for (uint32_t n = 0; n < job->nonce_count; ++n)
+      for (uint32_t n = job->nonce_start; n < job->nonce_start + job->nonce_count; ++n)
       {
         uint32_t* nonce_ptr = (uint32_t*)(job->sha_buffer + 76);
 *nonce_ptr = job->nonce_start + n;
@@ -1078,7 +1078,7 @@ void minerWorkerHw(void * task_id)
       memcpy(sha_buffer, job->sha_buffer, 80);
 
       esp_sha_lock_engine(SHA2_256);
-      for (uint32_t n = 0; n < job->nonce_count; ++n)
+      for (uint32_t n = job->nonce_start; n < job->nonce_start + job->nonce_count; ++n)
       {
         
         //sha_hal_hash_block(SHA2_256, s_test_buffer, 64/4, true);
