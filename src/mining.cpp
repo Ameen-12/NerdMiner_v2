@@ -480,7 +480,6 @@ for (int i = 0; i < 32; i++)
                                       break;
           default:                    // Serial.println("  Parsed JSON: unknown"); break;
 
-      }
     }
 
     std::list<std::shared_ptr<JobResult>> job_result_list;
