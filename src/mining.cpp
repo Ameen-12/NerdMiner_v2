@@ -642,7 +642,15 @@ void minerWorkerSw(void * task_id)
       for (uint32_t n = job->nonce_start; n < end; ++n)
       {
         uint32_t* nonce_ptr = (uint32_t*)(job->sha_buffer + 76);
-result->nonce = n;
+*nonce_ptr = n;
+
+if (nerd_sha256d_baked(...))
+{
+    if (diff_hash > result->difficulty)
+    {
+        result->nonce = n;
+    }
+}
         if (nerd_sha256d_baked(job->midstate, job->sha_buffer+64, job->bake, hash))
         {
           double diff_hash = diff_from_target(hash);
