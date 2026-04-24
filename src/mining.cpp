@@ -1286,7 +1286,7 @@ void runMonitor(void *name)
         // Serial.printf(">>> [i] Miner: newJob>%s / inRun>%s) - Client: connected>%s / subscribed>%s / wificonnected>%s\n",
             "true",//(1) ? "true" : "false",
             isMinerSuscribed ? "true" : "false",
-            client.connected() ? "true" : "false", isMinerSuscribed ? "true" : "false", WiFi.status() == WL_CONNECTED ? "true" : "false");
+            Serial.println("Status check"); isMinerSuscribed ? "true" : "false", WiFi.status() == WL_CONNECTED ? "true" : "false");
       }
 
       #ifdef DEBUG_MEMORY
