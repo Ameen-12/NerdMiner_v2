@@ -585,7 +585,7 @@ for (int i = 0; i < 32; i++)
         mLastTXtoPool = millis();
 
         std::shared_ptr<Submission> Submission = std::make_shared<Submission>();
-        Submission->diff = res->difficulty;
+        submission->diff = res->difficulty;
         Submission->is32bit = (res->hash[29] == 0 && res->hash[28] == 0);
         if (Submission->is32bit)
         {
