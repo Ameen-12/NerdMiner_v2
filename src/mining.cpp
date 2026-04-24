@@ -584,7 +584,7 @@ for (int i = 0; i < 32; i++)
         // Serial.println("");
         mLastTXtoPool = millis();
 
-        std::shared_ptr<Submission> Submission = std::make_shared<Submission>();
+        std::shared_ptr<Submission> submission = std::make_shared<Submission>();
         submission->diff = res->difficulty;
         Submission->is32bit = (res->hash[29] == 0 && res->hash[28] == 0);
         if (Submission->is32bit)
